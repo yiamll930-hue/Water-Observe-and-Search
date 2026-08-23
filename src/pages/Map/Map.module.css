@@ -1,0 +1,11 @@
+.page { display: flex; flex-direction: column; gap: var(--space-lg); height: calc(100vh - var(--topbar-height) - 2 * var(--space-xl)); max-width: 1400px; }
+.mapSection { flex: 1; min-height: 0; }
+.controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.regionBtn {
+  padding: 5px 14px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 550;
+  color: var(--color-text-secondary); border: 1px solid var(--color-border);
+  background: var(--color-surface); transition: all var(--transition-fast);
+  &:hover { border-color: var(--color-accent-border); color: var(--color-accent-light); }
+  &.active { background: var(--color-accent-bg); border-color: var(--color-accent-border); color: var(--color-accent-light); }
+}
+.coordHint { font-size: 11px; color: var(--color-text-secondary); margin-left: auto; font-family: var(--font-mono); }

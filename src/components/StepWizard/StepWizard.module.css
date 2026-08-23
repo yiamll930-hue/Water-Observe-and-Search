@@ -1,0 +1,36 @@
+.steps {
+  display: flex; gap: 0; margin-bottom: var(--space-xl);
+}
+
+.step {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 12px var(--space-md);
+  border-bottom: 2px solid var(--color-border);
+  color: var(--color-text-secondary);
+  font-size: 13px; font-weight: 500;
+  transition: all var(--transition);
+
+  &.active {
+    border-bottom-color: var(--color-accent);
+    color: var(--color-accent-light);
+  }
+
+  &.done {
+    border-bottom-color: var(--color-success);
+    color: var(--color-success);
+  }
+}
+
+.stepNum {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+  background: var(--color-border);
+  color: var(--color-text-secondary);
+  .active & { background: var(--color-accent); color: #fff; }
+  .done & { background: var(--color-success); color: #fff; }
+}
+
+.stepBody {
+  padding: var(--space-lg) 0;
+}

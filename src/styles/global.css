@@ -1,0 +1,56 @@
+@import './variables.css';
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1, h2, h3, h4 { color: var(--color-text-heading); font-weight: 600; line-height: 1.25; }
+h1 { font-size: 22px; letter-spacing: -0.015em; }
+h2 { font-size: 17px; }
+h3 { font-size: 14px; }
+h4 { font-size: 13px; }
+
+a { color: var(--color-accent); text-decoration: none; }
+a:hover { color: var(--color-accent-hover); }
+
+button { cursor: pointer; font-family: inherit; border: none; background: none; color: inherit; }
+input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+input:focus-visible, select:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-bg), 0 0 0 1px var(--color-accent-border);
+  border-color: var(--color-accent) !important;
+}
+
+::selection { background: var(--color-accent-bg); color: var(--color-accent-light); }
+
+/* 滚动条 — 极简 */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-secondary); }
+
+.leaflet-container { width: 100%; height: 100%; border-radius: var(--radius-md); z-index: 0; background: var(--color-bg) !important; }
+
+/* 通用工具类 */
+.page-title { margin-bottom: var(--space-lg); }
+.page-title h2 { font-weight: 650; margin-bottom: 2px; }
+.page-title p { color: var(--color-text-secondary); font-size: 13px; }
+
+.surface {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
