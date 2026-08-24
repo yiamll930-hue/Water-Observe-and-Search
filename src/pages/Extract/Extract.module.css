@@ -1,0 +1,16 @@
+.page { max-width: 1000px; }
+.params {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-md); margin-bottom: var(--space-lg);
+  @media (max-width: 768px) { grid-template-columns: 1fr; }
+}
+.field {
+  label { display: block; font-size: 12px; font-weight: 600; color: var(--color-text-secondary); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.4px; }
+  select, input { width: 100%; padding: 8px 12px; border: 1px solid var(--color-border-strong); border-radius: var(--radius-sm); background: var(--color-surface); font-size: 13px; }
+}
+.actions { display: flex; gap: var(--space-sm); justify-content: flex-end; margin-top: var(--space-lg); }
+.btn {
+  padding: 8px 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 550; display: inline-flex; align-items: center; gap: 6px;
+  transition: all var(--transition-fast);
+  &Outline { border: 1px solid var(--color-border-strong); color: var(--color-text); &:hover { border-color: var(--color-accent-border); color: var(--color-accent-light); } &:disabled { opacity: 0.35; cursor: not-allowed; } }
+  &Primary { background: var(--gradient-accent); color: #fff; &:hover { opacity: 0.88; } &:disabled { opacity: 0.35; cursor: not-allowed; } }
+}
