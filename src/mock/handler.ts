@@ -2,10 +2,10 @@ import {
   emptyStats,
   emptyTimeSeries,
   emptyAnomalies,
-  emptyWaterMap,
   emptyMeteo,
   createEmptyTask,
 } from './data'
+import { poyangStats, poyangTimeSeries, poyangWaterMap } from './poyangSample'
 
 // Mock 处理器 — 返回空数据/占位数据，不臆造任何数值
 export async function mockHandler<T>(
@@ -20,13 +20,14 @@ export async function mockHandler<T>(
 
   // GET /api/v1/stats
   if (method === 'GET' && path === '/stats') {
-    return emptyStats as T
+    return (p.region === 'poyang' ? poyangStats : emptyStats) as T
   }
 
   // GET /api/v1/timeseries/:region
   const tsMatch = path.match(/^\/timeseries\/(.+)$/)
   if (method === 'GET' && tsMatch) {
     const region = tsMatch[1]
+    if (region === 'poyang') return poyangTimeSeries as T
     const labels: Record<string, string> = { poyang: '鄱阳湖', dongting: '洞庭湖', guangxi: '广西' }
     return emptyTimeSeries(region, labels[region] ?? region) as T
   }
@@ -38,7 +39,7 @@ export async function mockHandler<T>(
 
   // GET /api/v1/water-map
   if (method === 'GET' && path === '/water-map') {
-    return emptyWaterMap as T
+    return poyangWaterMap as T
   }
 
   // GET /api/v1/meteo/correlation

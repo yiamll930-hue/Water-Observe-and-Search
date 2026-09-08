@@ -3,6 +3,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { Layers, Satellite } from 'lucide-react'
 import { useMapStore } from '../../store/map'
+import { fetchWaterMap } from '../../api/watermap'
 import styles from './MapView.module.css'
 
 // 默认中心：鄱阳湖
@@ -38,6 +39,7 @@ export default function MapView({
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<L.Map | null>(null)
   const tileRef = useRef<L.TileLayer | null>(null)
+  const waterLayerRef = useRef<L.GeoJSON | null>(null)
   const layers = useMapStore((s) => s.layers)
   const baseMap = useMapStore((s) => s.baseMap)
   const setBaseMap = useMapStore((s) => s.setBaseMap)
@@ -86,6 +88,44 @@ export default function MapView({
     if (!mapRef.current || !center) return
     mapRef.current.flyTo(center, DEFAULT_ZOOM, { duration: 1.2 })
   }, [center])
+
+  useEffect(() => {
+    if (!mapRef.current) return
+    let cancelled = false
+    fetchWaterMap()
+      .then((data) => {
+        if (cancelled || !mapRef.current) return
+        const layer = L.geoJSON(data as GeoJSON.GeoJsonObject, {
+          style: {
+            color: '#22d3ee',
+            weight: 1,
+            fillColor: '#0ea5e9',
+            fillOpacity: 0.42,
+          },
+        })
+        waterLayerRef.current = layer
+        if (layer.getBounds().isValid()) {
+          mapRef.current.fitBounds(layer.getBounds().pad(0.2))
+        }
+        if (useMapStore.getState().layers.find((item) => item.id === 'water-mask')?.visible) {
+          layer.addTo(mapRef.current)
+        }
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+      waterLayerRef.current?.remove()
+      waterLayerRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const layer = waterLayerRef.current
+    const visible = layers.find((item) => item.id === 'water-mask')?.visible ?? false
+    if (!layer || !mapRef.current) return
+    if (visible) layer.addTo(mapRef.current)
+    else layer.removeFrom(mapRef.current)
+  }, [layers])
 
   // GeoJSON 数据层 — 由后端 API 提供真实数据后叠加
   // 当前无数据时不渲染任何伪造图层
