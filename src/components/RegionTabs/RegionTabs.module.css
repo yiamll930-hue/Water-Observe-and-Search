@@ -1,0 +1,63 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-secondary);
+}
+
+.options {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+}
+
+.option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 3px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 550;
+  white-space: nowrap;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.option:hover { color: var(--color-text-heading); }
+
+.active {
+  background: var(--color-surface-active);
+  color: var(--color-text-heading);
+  box-shadow: var(--shadow-sm);
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+}
+
+.active .index { color: var(--color-accent-light); }
+
+@media (max-width: 720px) {
+  .wrapper { align-items: flex-start; flex-direction: column; gap: 5px; }
+}
+
+@media (max-width: 420px) {
+  /* 极窄屏隐藏序号，保证三个研究区仍能单行排列 */
+  .index { display: none; }
+  .option { gap: 0; padding: 0 8px; }
+}

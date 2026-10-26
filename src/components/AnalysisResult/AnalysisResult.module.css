@@ -1,0 +1,177 @@
+/* 分析结果 — 模拟标记、科学量空值与原始 JSON */
+
+.mockNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: var(--space-md);
+}
+.mockNote svg { flex-shrink: 0; margin-top: 2px; }
+.mockNote strong { display: block; font-size: 13.5px; }
+.mockNote p {
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-warning);
+  opacity: 0.88;
+}
+
+.resultNote {
+  margin-bottom: var(--space-md);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+.resultNote code {
+  padding: 0 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.metricStrip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  overflow: hidden;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  padding: 12px 13px;
+}
+.metric + .metric { border-left: 1px solid var(--color-border-subtle); }
+
+.metricLabel {
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+}
+
+.metricValue {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  min-height: 24px;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+.metricValue em {
+  font-style: normal;
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.meta { margin-top: var(--space-md); }
+
+.timeSection { margin-top: var(--space-md); }
+
+.subTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-bottom: 7px;
+  font-size: 13px;
+  font-weight: 620;
+  color: var(--color-text-heading);
+}
+.subTitle span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.timestamps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  max-height: 146px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.timestamp {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 6px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-heading);
+  white-space: nowrap;
+}
+.timestamp span {
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.raw {
+  margin-top: var(--space-md);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-sm);
+}
+.raw summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+  list-style: none;
+}
+.raw summary::-webkit-details-marker { display: none; }
+.raw summary::before {
+  content: '+';
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+.raw[open] summary::before { content: '−'; }
+.raw summary span { opacity: 0.7; }
+.raw summary:hover { color: var(--color-text-heading); }
+.raw pre {
+  max-height: 360px;
+  margin-top: 8px;
+  padding: 10px 11px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text);
+  tab-size: 2;
+}
+
+@media (max-width: 760px) {
+  .metricStrip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric:nth-child(3) { border-left: none; }
+  .metric:nth-child(n + 3) { border-top: 1px solid var(--color-border-subtle); }
+}
+
+@media (max-width: 480px) {
+  .timestamp { flex-direction: column; gap: 0; align-items: flex-start; }
+  .timestamp span { white-space: normal; word-break: break-all; }
+}

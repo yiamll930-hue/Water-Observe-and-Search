@@ -1,0 +1,167 @@
+/* 时相编辑器 — 行式录入时间与资源地址 */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.counts {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.rangeHint {
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 22px 190px minmax(0, 1fr) auto 30px;
+  grid-template-areas: 'index time uri format remove';
+  align-items: end;
+  gap: 9px;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.row:hover { border-color: var(--color-border); }
+.rowInvalid { border-color: var(--color-danger-border); background: var(--color-danger-bg); }
+
+.index {
+  grid-area: index;
+  align-self: center;
+  padding-bottom: 1px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.field label {
+  font-size: 12px;
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary);
+}
+
+.timeField { grid-area: time; }
+.uriField { grid-area: uri; }
+
+.input {
+  height: 34px;
+  background: var(--color-surface);
+  font-size: 14px;
+}
+
+.uriInput { font-family: var(--font-mono); font-size: 13px; }
+
+.invalid { border-color: var(--color-danger-border); }
+
+.error {
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--color-danger);
+}
+
+.format {
+  grid-area: format;
+  align-self: center;
+  margin-bottom: 1px;
+}
+
+.remove {
+  grid-area: remove;
+  align-self: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-secondary);
+}
+.remove:hover:not(:disabled) { color: var(--color-danger); }
+
+.note {
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+.note code {
+  padding: 0 3px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent-light);
+}
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: 22px minmax(0, 1fr) auto 30px;
+    grid-template-areas:
+      'index time format remove'
+      'index uri uri uri';
+    align-items: start;
+    row-gap: 7px;
+  }
+  .index { padding-top: 26px; }
+  .timeField { max-width: none; }
+  .format { align-self: end; margin-bottom: 8px; }
+  .remove { align-self: start; margin-top: 18px; }
+}
+
+@media (max-width: 620px) {
+  .toolbar { align-items: flex-start; flex-direction: column; }
+  .actions { width: 100%; }
+  .actions :global(.btn) { flex: 1; }
+  .row { padding: 8px; gap: 7px; }
+  .format { display: none; }
+  .row {
+    grid-template-columns: 18px minmax(0, 1fr) 28px;
+    grid-template-areas:
+      'index time remove'
+      'index uri uri';
+  }
+}

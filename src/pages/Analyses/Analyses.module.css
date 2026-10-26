@@ -1,0 +1,102 @@
+/* 分析记录 — 倒序分页列表 */
+
+.inlineCallout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.inlineCallout svg { flex-shrink: 0; }
+.errorHint { font-size: 12px; opacity: 0.82; }
+
+.limitLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.limitSelect {
+  width: 62px;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-text-heading);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+}
+
+.loadingWrap { min-height: 260px; }
+
+.emptyWrap { padding: var(--space-lg); }
+
+.loadingTable { opacity: 0.55; pointer-events: none; }
+
+.recordId {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--color-text-secondary);
+  opacity: 0.72;
+}
+
+.algorithmId {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-text-heading);
+  white-space: nowrap;
+}
+
+.colRange {
+  font-size: 13.5px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.viewLink {
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.pageState {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.noTotal {
+  font-family: var(--font-sans);
+  font-size: 11.5px;
+  opacity: 0.72;
+}
+
+.pagerButtons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@media (max-width: 760px) {
+  .colRange { display: none; }
+  .pagination { align-items: flex-start; flex-direction: column; }
+  .pagerButtons { width: 100%; }
+  .pagerButtons :global(.btn) { flex: 1; }
+  .errorHint { width: 100%; }
+}

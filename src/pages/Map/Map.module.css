@@ -1,11 +1,234 @@
-.page { display: flex; flex-direction: column; gap: var(--space-lg); height: calc(100vh - var(--topbar-height) - 2 * var(--space-xl)); max-width: 1400px; }
-.mapSection { flex: 1; min-height: 0; }
-.controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.regionBtn {
-  padding: 5px 14px; border-radius: var(--radius-sm); font-size: 12.5px; font-weight: 550;
-  color: var(--color-text-secondary); border: 1px solid var(--color-border);
-  background: var(--color-surface); transition: all var(--transition-fast);
-  &:hover { border-color: var(--color-accent-border); color: var(--color-accent-light); }
-  &.active { background: var(--color-accent-bg); border-color: var(--color-accent-border); color: var(--color-accent-light); }
+/* 研究区地图 — 静态地理参照、坐标读取与研究区一览 */
+
+.scopeNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.6;
 }
-.coordHint { font-size: 11px; color: var(--color-text-secondary); margin-left: auto; font-family: var(--font-mono); }
+.scopeNote > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.regionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+
+.regionHint {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 334px;
+  align-items: start;
+  gap: var(--space-lg);
+  scroll-margin-top: calc(var(--topbar-height) + var(--space-md));
+}
+
+.mapPanel { min-width: 0; overflow: hidden; }
+
+.mapBody { border-radius: 0; }
+
+.mapCanvas {
+  height: clamp(520px, calc(100vh - 280px), 720px);
+  min-height: 520px;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: sticky;
+  top: calc(var(--topbar-height) + var(--space-lg));
+  min-width: 0;
+}
+
+.description {
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--color-text);
+}
+
+.side :global(.kv-row) { align-items: flex-start; font-size: 13px; }
+.side :global(.kv-row dt) { flex-shrink: 0; }
+.side :global(.kv-row dd) { font-size: 13px; line-height: 1.55; }
+
+.bboxRow :global(dd) {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: -0.01em;
+}
+
+.sensorList {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.metaNote {
+  margin-top: 10px;
+  padding-top: 9px;
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.coordValue {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  line-height: 1.35;
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+
+.coordMeta {
+  margin-top: 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.coordActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.coordEmpty {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-2);
+  color: var(--color-text-secondary);
+}
+.coordEmpty > svg { flex-shrink: 0; margin-top: 2px; }
+.coordEmptyTitle {
+  font-size: 13.5px;
+  font-weight: 550;
+  color: var(--color-text-heading);
+}
+.coordEmpty p {
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+}
+
+.mapFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  min-height: 34px;
+  padding: 6px var(--space-md);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+}
+
+.legendSwatch {
+  width: 12px;
+  height: 9px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 1px;
+  background: var(--color-surface-active);
+  flex-shrink: 0;
+}
+
+.legendMuted {
+  padding-left: 13px;
+  border-left: 1px solid var(--color-border);
+  font-size: 12.5px;
+  color: var(--color-text-secondary);
+  opacity: 0.78;
+}
+
+.mapSource {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* 研究区一览 */
+.regionTable { min-width: 960px; }
+.regionTable td { white-space: nowrap; }
+.regionTable td.mono { font-size: 12.5px; }
+
+.rowActive { background: var(--color-accent-bg); }
+.rowActive:hover td { background: var(--color-accent-bg) !important; }
+
+.regionName {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 550;
+  color: var(--color-text-heading);
+}
+
+.regionIndex {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--color-text-secondary);
+  opacity: 0.72;
+}
+
+@media (max-width: 1180px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .side {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+@media (max-width: 760px) {
+  .regionBar { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .regionHint { white-space: normal; }
+  .side { grid-template-columns: minmax(0, 1fr); }
+  .mapCanvas { height: 500px; min-height: 500px; }
+  .mapFooter { align-items: flex-start; flex-direction: column; gap: 6px; }
+  .mapSource { white-space: normal; }
+}
+
+@media (max-width: 520px) {
+  .mapCanvas { height: 440px; min-height: 440px; }
+  .legendMuted { padding-left: 0; border-left: none; }
+}
