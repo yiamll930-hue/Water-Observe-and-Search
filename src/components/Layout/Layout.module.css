@@ -1,3 +1,5 @@
+/* 布局 — 固定顶栏、分组导航与内容区 */
+
 .layout {
   display: flex;
   min-height: 100vh;
@@ -6,7 +8,6 @@
 
 /* 侧边栏 */
 .sidebar {
-  width: var(--sidebar-width);
   position: fixed;
   top: var(--topbar-height);
   left: 0;
@@ -14,72 +15,204 @@
   z-index: 100;
   display: flex;
   flex-direction: column;
-  padding: 12px 8px;
+  width: var(--sidebar-width);
+  padding: 8px 8px 10px;
   border-right: 1px solid var(--color-border);
   background: var(--sidebar-bg);
-  transition: width var(--transition);
   overflow: hidden;
+  transition: width var(--transition);
+}
+.sidebar.collapsed { width: var(--sidebar-collapsed-width); }
 
-  &.collapsed { width: var(--sidebar-collapsed-width); }
+.nav {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.navGroup + .navGroup { margin-top: 8px; }
+.sidebar.collapsed .navGroup + .navGroup {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-subtle);
 }
 
 .navSection {
-  font-size: 9.5px;
-  font-weight: 700;
+  padding: 7px 10px 4px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   color: var(--sidebar-text);
-  opacity: 0.4;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  padding: 16px 10px 6px;
+  opacity: 0.62;
   white-space: nowrap;
   overflow: hidden;
-  .collapsed & { opacity: 0; height: 0; padding: 0; }
+  text-overflow: ellipsis;
 }
+.sidebar.collapsed .navSection { display: none; }
 
 .navItem {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
+  gap: 9px;
+  min-height: 34px;
+  padding: 0 10px;
   border-radius: var(--radius-sm);
   color: var(--sidebar-text);
-  text-decoration: none;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 500;
-  transition: all var(--transition-fast);
+  text-decoration: none;
   white-space: nowrap;
   overflow: hidden;
-  margin-bottom: 1px;
-
-  svg { flex-shrink: 0; width: 17px; height: 17px; opacity: 0.6; transition: opacity var(--transition-fast); }
-
-  &:hover { background: var(--sidebar-hover-bg); color: var(--sidebar-text-hover); text-decoration: none; svg { opacity: 0.85; } }
-
-  &.active {
-    background: var(--sidebar-active-bg);
-    color: var(--color-accent);
-    svg { opacity: 1; color: var(--color-accent); }
-  }
+  transition: background var(--transition-fast), color var(--transition-fast);
 }
+.navItem svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  opacity: 0.62;
+  transition: opacity var(--transition-fast), color var(--transition-fast);
+}
+.navItem:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--sidebar-text-hover);
+  text-decoration: none;
+}
+.navItem:hover svg { opacity: 0.92; }
+.navItem.active {
+  background: var(--sidebar-active-bg);
+  color: var(--color-accent-light);
+  box-shadow: inset 2px 0 0 var(--color-accent);
+}
+.navItem.active svg { opacity: 1; color: var(--color-accent); }
 
 .navLabel {
-  opacity: 1; transition: opacity var(--transition-fast);
-  .collapsed & { opacity: 0; width: 0; }
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+.navLabelFull { display: inline; }
+.navLabelShort { display: none; }
+.sidebar.collapsed .navItem { justify-content: center; padding: 0; }
+.sidebar.collapsed .navLabel { display: none; }
+
+.sidebarFoot {
+  flex-shrink: 0;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.toggleButton {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.toggleButton:hover {
+  background: var(--sidebar-hover-bg);
+  color: var(--color-text-heading);
+}
+.toggleButton svg { flex-shrink: 0; }
+.sidebar.collapsed .toggleButton { justify-content: center; padding: 0; }
+.sidebar.collapsed .toggleButton .navLabel { display: none; }
+
+.buildNote {
+  padding: 8px 10px 2px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--color-text-secondary);
+  opacity: 0.62;
+}
+.sidebar.collapsed .buildNote { display: none; }
 
 /* 内容区 */
 .content {
   flex: 1;
+  min-width: 0;
+  min-height: calc(100vh - var(--topbar-height));
   margin-left: var(--sidebar-width);
   padding: var(--space-xl);
-  min-height: calc(100vh - var(--topbar-height));
   transition: margin-left var(--transition);
+}
+.contentCollapsed { margin-left: var(--sidebar-collapsed-width); }
 
-  .collapsed ~ & { margin-left: var(--sidebar-collapsed-width); }
+/* 平板与移动端：固定为图标栏，导航项带短标签 */
+@media (max-width: 900px) {
+  .sidebar,
+  .sidebar.collapsed { width: var(--sidebar-collapsed-width); }
+
+  .navSection,
+  .buildNote,
+  .toggleButton { display: none; }
+
+  .navGroup + .navGroup,
+  .sidebar.collapsed .navGroup + .navGroup {
+    margin-top: 7px;
+    padding-top: 7px;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .navItem,
+  .sidebar.collapsed .navItem {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    min-height: 44px;
+    padding: 5px 1px;
+    font-size: 12px;
+    overflow: visible;
+  }
+  .navItem svg { width: 16px; height: 16px; }
+  .sidebar.collapsed .navLabel,
+  .navLabel {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.15;
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+  .navLabelFull { display: none; }
+  .navLabelShort {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .content,
+  .contentCollapsed {
+    margin-left: var(--sidebar-collapsed-width);
+    padding: var(--space-lg);
+  }
 }
 
-/* 响应式 */
-@media (max-width: 768px) {
-  .sidebar { width: var(--sidebar-collapsed-width); .navLabel, .navSection { opacity: 0; width: 0; } }
-  .content { margin-left: var(--sidebar-collapsed-width); padding: var(--space-md); }
+@media (max-width: 560px) {
+  .content,
+  .contentCollapsed { padding: var(--space-md); }
+  .navItem,
+  .sidebar.collapsed .navItem { min-height: 41px; }
 }

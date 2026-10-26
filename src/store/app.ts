@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { getStoredApiKey, setStoredApiKey } from '../api/client'
 import type { Region } from '../types'
 
 type Theme = 'dark' | 'light'
@@ -7,11 +8,11 @@ interface AppState {
   theme: Theme
   sidebarCollapsed: boolean
   currentRegion: Region
-  timeRange: [string, string]
+  apiKey: string
   toggleTheme: () => void
   toggleSidebar: () => void
   setRegion: (region: Region) => void
-  setTimeRange: (range: [string, string]) => void
+  setApiKey: (key: string) => void
 }
 
 // 从 localStorage 读取主题偏好
@@ -34,7 +35,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   theme: getInitialTheme(),
   sidebarCollapsed: false,
   currentRegion: 'poyang',
-  timeRange: ['2024-01', '2024-12'],
+  apiKey: getStoredApiKey(),
   toggleTheme: () => {
     const next = get().theme === 'dark' ? 'light' : 'dark'
     applyTheme(next)
@@ -42,5 +43,9 @@ export const useAppStore = create<AppState>((set, get) => ({
   },
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
   setRegion: (region) => set({ currentRegion: region }),
-  setTimeRange: (range) => set({ timeRange: range }),
+  setApiKey: (key) => {
+    const next = key.trim()
+    setStoredApiKey(next)
+    set({ apiKey: next })
+  },
 }))

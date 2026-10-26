@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { formatErrorMessage } from '../api/client'
 
 interface UseApiState<T> {
   data: T | null
@@ -7,41 +8,53 @@ interface UseApiState<T> {
   refresh: () => void
 }
 
+// 通用 API Hook — 处理加载、错误与手动刷新
 export function useApi<T>(
   fetcher: () => Promise<T>,
-  deps: unknown[] = []
+  deps: unknown[] = [],
+  options: { enabled?: boolean } = {}
 ): UseApiState<T> {
-  const [data, setData] = useState<T | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const mountedRef = useRef(true)
+  const { enabled = true } = options
+  const fetcherRef = useRef(fetcher)
+  fetcherRef.current = fetcher
 
-  const fetch = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const result = await fetcher()
-      if (mountedRef.current) {
-        setData(result)
-      }
-    } catch (err) {
-      if (mountedRef.current) {
-        setError(err instanceof Error ? err.message : '请求失败')
-      }
-    } finally {
-      if (mountedRef.current) {
-        setLoading(false)
-      }
-    }
-  }, deps) // eslint-disable-line react-hooks/exhaustive-deps
+  const [data, setData] = useState<T | null>(null)
+  const [loading, setLoading] = useState(enabled)
+  const [error, setError] = useState<string | null>(null)
+  const [version, setVersion] = useState(0)
+
+  // 手动刷新 — 递增版本号触发重新请求
+  const refresh = useCallback(() => setVersion((value) => value + 1), [])
 
   useEffect(() => {
-    mountedRef.current = true
-    fetch()
-    return () => {
-      mountedRef.current = false
+    if (!enabled) {
+      setData(null)
+      setLoading(false)
+      setError(null)
+      return
     }
-  }, [fetch])
 
-  return { data, loading, error, refresh: fetch }
+    let alive = true
+    setLoading(true)
+    setError(null)
+
+    fetcherRef.current()
+      .then((result) => {
+        if (alive) setData(result)
+      })
+      .catch((err: unknown) => {
+        if (!alive) return
+        setError(formatErrorMessage(err))
+      })
+      .finally(() => {
+        if (alive) setLoading(false)
+      })
+
+    return () => {
+      alive = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled, version, ...deps])
+
+  return { data, loading, error, refresh }
 }
